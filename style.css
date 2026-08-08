@@ -157,6 +157,20 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
+   Scroll Reveal & Entrance Animations
+   ========================================================================== */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
    Navigation Bar
    ========================================================================== */
 .navbar {
@@ -612,14 +626,62 @@ button, input, select, textarea {
   left: -8px;
 }
 
+/* Timeline Dot Pulsing Glow Animation */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.8);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(212, 175, 55, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+  }
+}
+
 .timeline-dot.gold-dot {
   background: var(--secondary-brand);
-  box-shadow: 0 0 15px var(--secondary-brand), 0 0 30px var(--glow-gold);
+  animation: pulse-glow 2s infinite ease-in-out;
 }
 
 .timeline-content {
   padding: 1.75rem;
   position: relative;
+}
+
+/* Timeline Cards Slide-In Animations (Desktop) */
+@media (min-width: 769px) {
+  .timeline-item.left .timeline-content {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .timeline-item.right .timeline-content {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .timeline-item.visible .timeline-content {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Timeline Cards Slide-In Animations (Mobile) */
+@media (max-width: 768px) {
+  .timeline-item.left .timeline-content,
+  .timeline-item.right .timeline-content {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .timeline-item.visible .timeline-content {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .timeline-date {
@@ -795,7 +857,7 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
-   Partnerships & Corporate Sponsors Section
+   Partnerships & Corporate Sponsors Section (Popover Overlay & Grayscale)
    ========================================================================== */
 .partners-grid {
   display: grid;
@@ -804,19 +866,22 @@ button, input, select, textarea {
 }
 
 .partner-card {
+  min-height: 180px;
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   position: relative;
   overflow: hidden;
+  outline: none;
   /* Grayscale-to-color transition state */
   filter: grayscale(100%);
   opacity: 0.82;
   transition: filter 0.4s ease, opacity 0.4s ease, transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.partner-card:hover {
+.partner-card:hover,
+.partner-card:focus-within {
   filter: grayscale(0%);
   opacity: 1;
   transform: translateY(-5px);
@@ -866,10 +931,46 @@ button, input, select, textarea {
   display: block;
 }
 
-.partner-desc {
-  font-size: 0.95rem;
+.partner-hint {
+  margin-top: auto;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.3s ease;
+}
+
+.partner-card:hover .partner-hint {
+  color: var(--secondary-brand);
+}
+
+/* Glassmorphic Popover Tooltip Slide-Up Overlay */
+.partner-desc {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.25rem 1.5rem;
+  background: rgba(12, 15, 13, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--secondary-brand);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  z-index: 5;
+  font-size: 0.9rem;
   line-height: 1.6;
+  color: var(--text-main);
+  box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.6);
+}
+
+.partner-card:hover .partner-desc,
+.partner-card:focus-within .partner-desc {
+  transform: translateY(0);
 }
 
 /* ==========================================================================
