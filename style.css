@@ -68,14 +68,17 @@ a {
 
 /* Tab Showcase Panels */
 .tab-content {
-  display: none;
   opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .tab-content.active {
-  display: block;
   opacity: 1;
+  visibility: visible;
+  height: auto;
 }
 
 /* Mobile Nav Link Overlay */
