@@ -28,10 +28,6 @@ function initMobileMenu() {
     navLinks.classList.toggle('active', isExpanded);
     navToggle.classList.toggle('active', isExpanded);
     navToggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-    
-    if (window.innerWidth <= 768) {
-      navLinks.style.display = isExpanded ? 'flex' : '';
-    }
   }
 
   navToggle.addEventListener('click', (e) => {
@@ -90,18 +86,6 @@ function initTabs() {
       const isTarget = content.id === targetTabId;
       content.classList.toggle('active', isTarget);
       content.setAttribute('aria-hidden', isTarget ? 'false' : 'true');
-
-      if (isTarget) {
-        content.style.display = 'block';
-        setTimeout(() => {
-          content.style.opacity = '1';
-          content.style.visibility = 'visible';
-        }, 10);
-      } else {
-        content.style.opacity = '0';
-        content.style.visibility = 'hidden';
-        content.style.display = 'none';
-      }
     });
 
     if (winsGrid) {
