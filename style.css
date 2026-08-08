@@ -766,17 +766,22 @@ button, input, select, textarea {
 }
 
 .tab-content {
+  display: grid;
+  grid-template-rows: 0fr;
   opacity: 0;
   visibility: hidden;
-  height: 0;
+  transition: grid-template-rows 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.tab-content > * {
   overflow: hidden;
-  transition: opacity 0.35s ease, visibility 0.35s ease;
+  min-height: 0;
 }
 
 .tab-content.active {
+  grid-template-rows: 1fr;
   opacity: 1;
   visibility: visible;
-  height: auto;
 }
 
 .cards-grid {
@@ -1094,6 +1099,7 @@ button, input, select, textarea {
   inset: 0;
   background: rgba(12, 15, 13, 0.95);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1103,11 +1109,37 @@ button, input, select, textarea {
   z-index: 10;
   border-radius: 12px;
   opacity: 0;
-  transition: opacity 0.35s ease;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.95);
+  transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s ease;
 }
 
 .form-success-overlay.active {
   opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+.overlay-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.overlay-close-btn:hover {
+  color: var(--secondary-brand);
 }
 
 .form-success-overlay h3 {

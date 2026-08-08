@@ -80,6 +80,7 @@ function initTabs() {
       const isTarget = btnTarget === targetTabId;
       btn.classList.toggle('active', isTarget);
       btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+      btn.setAttribute('tabindex', isTarget ? '0' : '-1');
     });
 
     tabContents.forEach(content => {
@@ -96,10 +97,21 @@ function initTabs() {
     }
   }
 
-  tabBtns.forEach(btn => {
+  tabBtns.forEach((btn, index) => {
     btn.addEventListener('click', () => {
       const targetTabId = btn.getAttribute('data-tab') || (btn.id === 'btn-wins' ? 'tab-wins' : 'tab-records');
       switchTab(targetTabId);
+    });
+
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const nextIndex = (index + dir + tabBtns.length) % tabBtns.length;
+        tabBtns[nextIndex].focus();
+        const targetTabId = tabBtns[nextIndex].getAttribute('data-tab') || (tabBtns[nextIndex].id === 'btn-wins' ? 'tab-wins' : 'tab-records');
+        switchTab(targetTabId);
+      }
     });
   });
 
@@ -205,12 +217,6 @@ function initContactForm() {
 
   if (!contactForm || !successOverlay) return;
 
-  // Initial state: hidden with aria-hidden="true"
-  successOverlay.setAttribute('aria-hidden', 'true');
-  successOverlay.style.display = 'none';
-  successOverlay.style.opacity = '0';
-  successOverlay.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-
   // Add dismiss close button if not present
   if (!successOverlay.querySelector('.overlay-close-btn')) {
     const closeBtn = document.createElement('button');
@@ -218,53 +224,23 @@ function initContactForm() {
     closeBtn.type = 'button';
     closeBtn.setAttribute('aria-label', 'Close message');
     closeBtn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
     `;
-    closeBtn.style.cssText = `
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: transparent;
-      border: none;
-      color: #8fa298;
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    `;
     closeBtn.addEventListener('click', () => hideSuccessOverlay());
-    successOverlay.style.position = 'relative';
     successOverlay.appendChild(closeBtn);
   }
 
   function hideSuccessOverlay() {
     successOverlay.classList.remove('active');
-    successOverlay.setAttribute('aria-hidden', 'true'); // Accessibility toggle
-    successOverlay.style.opacity = '0';
-    setTimeout(() => {
-      successOverlay.style.display = 'none';
-    }, 300);
+    successOverlay.setAttribute('aria-hidden', 'true');
   }
 
   function showSuccessOverlay() {
-    successOverlay.style.display = 'flex';
-    successOverlay.style.flexDirection = 'column';
-    successOverlay.style.alignItems = 'center';
-    successOverlay.style.justifyContent = 'center';
-    successOverlay.style.textAlign = 'center';
-
-    void successOverlay.offsetWidth; // Force reflow for transition
-
     successOverlay.classList.add('active');
-    successOverlay.setAttribute('aria-hidden', 'false'); // Accessibility requirement!
-    successOverlay.style.opacity = '1';
-
-    // Set focus for screen readers
+    successOverlay.setAttribute('aria-hidden', 'false');
     successOverlay.setAttribute('tabindex', '-1');
     successOverlay.focus();
   }
