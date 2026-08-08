@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+ocr-page-*.txt
+profile_text.txt
+page-*.png
